@@ -4,14 +4,52 @@
     <title></title>
     <script src="js/angular-1.3.0/angular.js"></script>
     <script src="js/bootstrap/ui-bootstrap-tpls-0.11.2.js"></script>
+
 </head>
 <body ng-app="myapp">
-<script>
-    var myapp = angular.module( "myapp", [ 'ui.bootstrap' ]);      // ajout d'un module ui.bootstrap
-</script>
 
-<input type="text" ng-model="name" placeholder="Name...">
-<div> Hello {{name}}!</div>
+    <script>
+        var myapp = angular.module( "myapp", [ 'ui.bootstrap' ]);      // ajout d'un module ui.bootstrap
+    </script>
+
+    <input type="text" ng-model="person.name" placeholder="Name...">
+    <div> {{"Hello " + person.name}}!</div>  <!-- binding de "{{person.name}}" avec ng-model="person.name" -->
+
+
+    <div ng-controller="inputCtrl">
+        <input type="text" ng-model="name">
+        <div> Hello {{ name }}!</div>
+        <div> {{ hello( name ) }}!</div>
+    </div>
+    <div> Hello {{ name }}!</div>  <!-- Hors du Scope du controller -->
+
+
+    <div ng-controller="ClickCtrl" >
+        <div ng-click="sayHello()">Click</div>
+    </div>
+
+    <script>
+
+        myapp.controller("inputCtrl" , function($scope){        <!-- declaration d'un controller pour angular >= 1.30-->
+            $scope.name = "Bob";
+
+            $scope.hello = function(name){
+                return "Hello " + name + " !"
+            };
+
+        });
+
+        myapp.controller("ClickCtrl" , function($scope){        <!-- declaration d'un controller pour angular >= 1.30-->
+            $scope.sayHello = function(){
+                alert("Hello !");
+            }
+        });
+
+
+
+    </script>
+
+
 
 </body>
 </html>
