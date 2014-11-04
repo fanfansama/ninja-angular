@@ -2,6 +2,7 @@
 <html>
 <head>
     <title></title>
+    <link data-require="bootstrap-css@3.0.0-rc2" data-semver="3.0.0-rc2" rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0-rc2/css/bootstrap.min.css" />
     <script src="js/angular-1.3.0/angular.js"></script>
     <script src="js/bootstrap/ui-bootstrap-tpls-0.11.2.js"></script>
 
@@ -9,37 +10,48 @@
 <body ng-app="myapp">
 
     <script>
-        var myapp = angular.module( "myapp", [ 'ui.bootstrap' ]);      // ajout d'un module ui.bootstrap
+        var controllers = angular.module("controllers", []);        // declaration d'un module controller   => [] tableau des dependances
+        var services = angular.module("services", []);              // declaration d'un module service      => [] tableau des dependances
+        var filters = angular.module("filters", []);              // declaration d'un module filters      => [] tableau des dependances
+        var directives = angular.module("directives", []);              // declaration d'un module directives      => [] tableau des dependances
+
+        // ajout des modules à l'application    ==> http://ngmodules.org/
+        // bonne pratique : 1 module pour controlleurs, un autre pour services, un pour les filtres et un pour les directives
+        var myapp = angular.module( "myapp", [ 'ui.bootstrap', 'controllers', 'services', 'filters', 'directives' ]);
+
     </script>
 
-    <input type="text" ng-model="person.name" placeholder="Name...">
-    <div> {{"Hello " + person.name}}!</div>  <!-- binding de "{{person.name}}" avec ng-model="person.name" -->
+
+    <div>
+        <h1>Controller</h1>
+        <input type="text" ng-model="person.name" placeholder="Name...">
+        <div> {{"Hello " + person.name}}!</div>  <!-- binding de "{{person.name}}" avec ng-model="person.name" -->
 
 
-    <div ng-controller="inputCtrl">
-        <input type="text" ng-model="name">
-        <div> Hello {{ name }}!</div>
-        <div> {{ hello( name ) }}!</div>
+        <div ng-controller="inputCtrl">
+            <input type="text" ng-model="name">
+            <div> Hello {{ name }}!</div>
+            <div> {{ hello( name ) }}!</div>
+        </div>
+        <div> Hello {{ name }}!</div>  <!-- Hors du Scope du controller -->
+
+
+        <div ng-controller="ClickCtrl" >
+            <div ng-click="sayHello()">Click</div>
+        </div>
     </div>
-    <div> Hello {{ name }}!</div>  <!-- Hors du Scope du controller -->
-
-
-    <div ng-controller="ClickCtrl" >
-        <div ng-click="sayHello()">Click</div>
-    </div>
-
     <script>
 
-        myapp.controller("inputCtrl" , function($scope){        <!-- declaration d'un controller pour angular >= 1.30-->
+        controllers.controller("inputCtrl" , function($scope){        <!-- declaration d'un controller pour angular >= 1.30-->
             $scope.name = "Bob";
 
-            $scope.hello = function(name){
-                return "Hello " + name + " !"
+            $scope.hello = function(pName){
+                return "Hello " + pName + " !"
             };
 
         });
 
-        myapp.controller("ClickCtrl" , function($scope){        <!-- declaration d'un controller pour angular >= 1.30-->
+        controllers.controller("ClickCtrl" , function($scope){        <!-- declaration d'un controller pour angular >= 1.30-->
             $scope.sayHello = function(){
                 alert("Hello !");
             }
@@ -49,6 +61,46 @@
 
     </script>
 
+
+    <div ng-controller="MainCtrl">
+        <h1>Filtres</h1>
+        <div class="form-group col-md-2">
+            <input class="form-control" ng-model="expression" placeholder="filter..." />
+        </div>
+        <table class="table table-bordered table-striped">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>SuperPower</th>
+                <th>Skills</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="ninja in ninjas | filter:expression">
+                <td>{{ ninja.name }}</td>
+                <td>{{ ninja.superpower }}</td>
+                <td>{{ ninja.skills.join(', ') }}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <script>
+        filters.controller("MainCtrl" , function($scope){
+            $scope.ninjas = [
+                { 'name': 'Agnes', 'superpower': 'Java Champion', 'skills': ['Java', 'JavaEE', 'BDD']},
+                { 'name': 'JB', 'superpower': 'Stack Overflow Superstar', 'skills': ['Java', 'Javascript', 'Gradle']},
+                { 'name': 'Cyril', 'superpower': 'VAT specialist' /*I'm joking buddy*/, 'skills': ['Java', 'Play!']},
+                { 'name': 'Cedric', 'superpower': 'Hype developper', 'skills': ['Java', 'Javascript', 'Git']},
+            ];
+        });
+    </script>
+
+
+
+    <script>
+        var services = angular.module("services"); // recuperer un module
+
+    </script>
 
 
 </body>
