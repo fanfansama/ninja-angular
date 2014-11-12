@@ -1,8 +1,8 @@
 (function (angular) {
 
-    var controllers = angular.module('controllers', []);
+    var controllersApp = angular.module('controllersApp', []);
 
-    controllers.controller("MessageCtrl", function($scope){
+    controllersApp.controller("MessageCtrl", function($scope){
         $scope.getMessage = function(pName){
             return "Hello " + pName ;
         };

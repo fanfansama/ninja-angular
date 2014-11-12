@@ -18,11 +18,10 @@
 
     });
 
-
     describe('Controller MessageCtrl', function(){
         var $scope;
 
-        beforeEach( module('controllers') );
+        beforeEach( module('controllersApp') );
 
         beforeEach(inject(function($rootScope, $controller) {
             $scope = $rootScope.$new();    // initialisation avec un nouveau scope
@@ -35,6 +34,31 @@
 
     });
 
+    describe('Poney' , function(){
+
+        var $scope, $httpBackend;
+
+        beforeEach( module('controllers') );
+
+        beforeEach(inject(function($rootScope, $controller, _$poneyService_, _$httpService_) {
+            $scope = $rootScope.$new();    // initialisation avec un nouveau scope
+            $poneyService = _$poneyService_;
+            $httpService = _$httpService_;
+
+            $controller('httpController', { $scope: $scope, $poneyService:$poneyService, $httpService:$httpService });   // nouvelle instance avec le nouveau scope
+        }));
+
+        it('should fetch 2 poneys', function(){
+           $httpBackend.expectGET("http://localhost:8080/poneys/").respond([ceed, jb]) ;
+
+           $scope.list();
+           $httpBackend.flush();
+
+           expect($scope.poneys.length).toBe(2);
+
+        });
+
+    }) ;
 
 })(angular);
 
